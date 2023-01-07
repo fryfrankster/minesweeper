@@ -1,0 +1,10 @@
+.square {
+    background-color: rgb(188, 188, 188);
+    width: 40px;
+    height: 40px;
+    border: 2px solid #000;
+}
+
+.clicked {
+    background-color: rgb(117, 117, 117);
+}
