@@ -1,18 +1,14 @@
 import { useState } from "react";
 import classes from "./Square.module.css";
 
+
 const Square = (props) => {
   const [isClicked, setIsClicked] = useState(false);
   
   const onSquareClickedHandler = (event) => {
     setIsClicked(true);
-    if (props.value === null) {
-      return;
-    };
-    if (props.value === "X") {
-      return;
-    };
-    if (props.value in ["1", "2", "3"]) {
+    if (props.value === "B") {
+      console.log("Clicked on a bomb. Game over.");
       return;
     };
   };

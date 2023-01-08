@@ -1,21 +1,27 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: rgb(167, 167, 167);
+  --accent: rgb(237, 242, 244);
 }
 
 .square {
-    background-color: rgb(188, 188, 188);
-    width: 40px;
-    height: 40px;
-    border: 2px solid #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  border: 1px solid var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  font-size: 50px;
+  font-family: sans-serif;
+  background-color: var(--primary);
 }
 
 .clicked {
-    background-color: rgb(117, 117, 117);
+  background-color: rgb(117, 117, 117);
 }
 
 p {
-    text-align: center;
+  text-align: center;
 }
