@@ -22,6 +22,12 @@ const generateGrid = (rows, columns, numBombs) => {
     }
   }
 
+  const surroundingSquares = [
+    {x: -1, y: -1},{x: 0, y: -1},{x: 1, y: -1},
+    {x: -1, y: 0},{x: 1, y: 0},
+    {x: -1, y: 1},{x: 0, y: 1},{x: 1, y: 1},
+  ]
+
   while (numBombs > 0) {
     const randRow = Math.floor(Math.random() * rows);
     const randColumn = Math.floor(Math.random() * columns);
@@ -29,10 +35,15 @@ const generateGrid = (rows, columns, numBombs) => {
       grid[randRow][randColumn].isBomb = true;
       numBombs--;
 
-      
+      surroundingSquares.forEach(({x, y}) => {
+        const nextRow = randRow + y;
+        const nextColumn = randColumn + x;
+        if ((nextRow >= 0 && nextRow < rows) && (nextColumn >= 0 && nextColumn < columns)) {
+          grid[nextRow][nextColumn].numBombsNearby++;
+        }
+      });
     }
   }
-
   return grid;
 };
 
