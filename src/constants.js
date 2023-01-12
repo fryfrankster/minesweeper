@@ -1,4 +1,5 @@
-const NUM_SQUARES = 81; // 9 x 9 grid
-const NUM_BOMBS = 2;
+const DEFAULT_NUM_BOMBS = 16;
+const DEFAULT_ROWS = 9;
+const DEFAULT_COLUMNS = 9;
 
-export { NUM_SQUARES, NUM_BOMBS };
+export { DEFAULT_NUM_BOMBS, DEFAULT_ROWS, DEFAULT_COLUMNS };
