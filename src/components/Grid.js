@@ -1,9 +1,9 @@
 import Square from "./Square";
 
 import classes from "./Grid.module.css";
+import ResetButton from "./ResetButton";
 import { useState } from "react";
 import { DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS, DEFAULT_ROWS } from "../constants";
-
 
 const generateGrid = (rows, columns, numBombs) => {
   const grid = [];
@@ -18,15 +18,20 @@ const generateGrid = (rows, columns, numBombs) => {
         isClicked: false,
         isFlagged: false,
         isBomb: false,
-      })
+      });
     }
   }
 
   const surroundingSquares = [
-    {x: -1, y: -1},{x: 0, y: -1},{x: 1, y: -1},
-    {x: -1, y: 0},{x: 1, y: 0},
-    {x: -1, y: 1},{x: 0, y: 1},{x: 1, y: 1},
-  ]
+    { x: -1, y: -1 },
+    { x: 0, y: -1 },
+    { x: 1, y: -1 },
+    { x: -1, y: 0 },
+    { x: 1, y: 0 },
+    { x: -1, y: 1 },
+    { x: 0, y: 1 },
+    { x: 1, y: 1 },
+  ];
 
   while (numBombs > 0) {
     const randRow = Math.floor(Math.random() * rows);
@@ -35,10 +40,15 @@ const generateGrid = (rows, columns, numBombs) => {
       grid[randRow][randColumn].isBomb = true;
       numBombs--;
 
-      surroundingSquares.forEach(({x, y}) => {
+      surroundingSquares.forEach(({ x, y }) => {
         const nextRow = randRow + y;
         const nextColumn = randColumn + x;
-        if ((nextRow >= 0 && nextRow < rows) && (nextColumn >= 0 && nextColumn < columns)) {
+        if (
+          nextRow >= 0 &&
+          nextRow < rows &&
+          nextColumn >= 0 &&
+          nextColumn < columns
+        ) {
           grid[nextRow][nextColumn].numBombsNearby++;
         }
       });
@@ -48,7 +58,9 @@ const generateGrid = (rows, columns, numBombs) => {
 };
 
 const Grid = () => {
-  const [gridValues, setGridValues] = useState(generateGrid(DEFAULT_ROWS, DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS));
+  const [gridValues, setGridValues] = useState(
+    generateGrid(DEFAULT_ROWS, DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS)
+  );
 
   const squareClickedHandler = (x, y) => {
     setGridValues((prevGridValues) => {
@@ -61,22 +73,31 @@ const Grid = () => {
     });
   };
 
+  const resetClickedHandler = () => {
+    setGridValues(
+      generateGrid(DEFAULT_ROWS, DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS)
+    );
+  };
+
   return (
-    <div className={classes.grid}>
-      {gridValues.map((row) =>
-        row.map(({ x, y, numBombsNearby, isClicked, isFlagged, isBomb }) => (
-          <Square
-            key={`${x}-${y}`}
-            x={x}
-            y={y}
-            numBombsNearby={numBombsNearby}
-            isClicked={isClicked}
-            isFlagged={isFlagged}
-            isBomb={isBomb}
-            onSquareClick={squareClickedHandler}
-          />
-        ))
-      )}
+    <div>
+      <div className={classes.grid}>
+        {gridValues.map((row) =>
+          row.map(({ x, y, numBombsNearby, isClicked, isFlagged, isBomb }) => (
+            <Square
+              key={`${x}-${y}`}
+              x={x}
+              y={y}
+              numBombsNearby={numBombsNearby}
+              isClicked={isClicked}
+              isFlagged={isFlagged}
+              isBomb={isBomb}
+              onSquareClick={squareClickedHandler}
+            />
+          ))
+        )}
+      </div>
+      <ResetButton onResetClick={resetClickedHandler}/>
     </div>
   );
 };

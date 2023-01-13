@@ -2,7 +2,7 @@ import classes from "./Square.module.css";
 
 
 const Square = (props) => {  
-  const value =  props.isClicked ? props.numBombsNearby : "";
+  const value =  props.isClicked ? (props.isBomb ? "B" : props.numBombsNearby) : "";
 
   const onSquareClickedHandler = () => {
     props.onSquareClick(props.x, props.y);
