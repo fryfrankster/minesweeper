@@ -66,17 +66,19 @@ const Grid = (props) => {
     const currentSquare = gridValues[y][x];
 
     if (props.gameStatus === GAME_STATUSES.PLAYING) {
-      setGridValues((prevGridValues) => {
-        const newArray = JSON.parse(JSON.stringify(prevGridValues));
-        newArray[y][x] = {
-          ...newArray[y][x],
-          isClicked: !newArray[y][x].isClicked,
-        };
-        return newArray;
-      });
-
-      if (currentSquare.isBomb) {
-        props.onChangeGameStatus(GAME_STATUSES.LOSE);
+      if (!currentSquare.isClicked) {
+        setGridValues((prevGridValues) => {
+          const newArray = JSON.parse(JSON.stringify(prevGridValues));
+          newArray[y][x] = {
+            ...newArray[y][x],
+            isClicked: !newArray[y][x].isClicked,
+          };
+          return newArray;
+        });
+  
+        if (currentSquare.isBomb) {
+          props.onChangeGameStatus(GAME_STATUSES.LOSE);
+        }
       }
     }
   };
