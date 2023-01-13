@@ -3,7 +3,7 @@ import Square from "./Square";
 import classes from "./Grid.module.css";
 import ResetButton from "./ResetButton";
 import { useState } from "react";
-import { DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS, DEFAULT_ROWS } from "../constants";
+import { DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS, DEFAULT_ROWS, GAME_STATUSES } from "../constants";
 
 const generateGrid = (rows, columns, numBombs) => {
   const grid = [];
@@ -57,26 +57,35 @@ const generateGrid = (rows, columns, numBombs) => {
   return grid;
 };
 
-const Grid = () => {
+const Grid = (props) => {
   const [gridValues, setGridValues] = useState(
     generateGrid(DEFAULT_ROWS, DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS)
   );
 
   const squareClickedHandler = (x, y) => {
-    setGridValues((prevGridValues) => {
-      const newArray = JSON.parse(JSON.stringify(prevGridValues));
-      newArray[y][x] = {
-        ...newArray[y][x],
-        isClicked: !newArray[y][x].isClicked,
-      };
-      return newArray;
-    });
+    const currentSquare = gridValues[y][x];
+
+    if (props.gameStatus === GAME_STATUSES.PLAYING) {
+      setGridValues((prevGridValues) => {
+        const newArray = JSON.parse(JSON.stringify(prevGridValues));
+        newArray[y][x] = {
+          ...newArray[y][x],
+          isClicked: !newArray[y][x].isClicked,
+        };
+        return newArray;
+      });
+
+      if (currentSquare.isBomb) {
+        props.onChangeGameStatus(GAME_STATUSES.LOSE);
+      }
+    }
   };
 
   const resetClickedHandler = () => {
     setGridValues(
       generateGrid(DEFAULT_ROWS, DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS)
     );
+    props.onChangeGameStatus(GAME_STATUSES.PLAYING);
   };
 
   return (

@@ -6,10 +6,10 @@ const Square = (props) => {
 
   const onSquareClickedHandler = () => {
     props.onSquareClick(props.x, props.y);
-    if (props.isBomb) {
-      console.log("Clicked on a bomb. Game over.");
-      return;
-    };
+    // if (props.isBomb) {
+    //   console.log("Clicked on a bomb. Game over.");
+    //   return;
+    // };
   };
 
   return (
