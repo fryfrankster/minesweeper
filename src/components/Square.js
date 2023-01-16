@@ -2,22 +2,37 @@ import classes from "./Square.module.css";
 
 
 const Square = (props) => {  
-  const value =  props.isClicked ? (props.isBomb ? "B" : props.numBombsNearby) : "";
+  const value = () => {
+    if (props.isFlagged) {
+      return "F";
+    }
+    if (props.isClicked) {
+      if (props.isBomb) {
+        return "B";
+      } else {
+        return props.numBombsNearby;
+      }
+    } else {
+      return "";
+    }
+  }
 
   const onSquareClickedHandler = () => {
     props.onSquareClick(props.x, props.y);
-    // if (props.isBomb) {
-    //   console.log("Clicked on a bomb. Game over.");
-    //   return;
-    // };
+  };
+
+  const onFlagClickedHandler = (event) => {
+    event.preventDefault();
+    props.onFlagClick(props.x, props.y);
   };
 
   return (
     <div
       className={`${classes.square} ${props.isClicked ? classes.clicked : ""}`}
       onClick={onSquareClickedHandler}
+      onContextMenu={onFlagClickedHandler}
     >
-      {value}
+      {value()}
     </div>
   );
 };

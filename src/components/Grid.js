@@ -66,7 +66,7 @@ const Grid = (props) => {
     const currentSquare = gridValues[y][x];
 
     if (props.gameStatus === GAME_STATUSES.PLAYING) {
-      if (!currentSquare.isClicked) {
+      if (!currentSquare.isClicked || currentSquare.isFlagged) {
         setGridValues((prevGridValues) => {
           const newArray = JSON.parse(JSON.stringify(prevGridValues));
           newArray[y][x] = {
@@ -82,6 +82,20 @@ const Grid = (props) => {
       }
     }
   };
+
+  const flagClickedHandler = (x, y) => {
+    const currentSquare = gridValues[y][x];
+    if (!currentSquare.isClicked) {
+      setGridValues((prevGridValues) => {
+        const newArray = JSON.parse(JSON.stringify(prevGridValues));
+        newArray[y][x] = {
+          ...newArray[y][x],
+          isFlagged: !newArray[y][x].isFlagged,
+        };
+        return newArray;
+      });
+    }
+  }
 
   const resetClickedHandler = () => {
     setGridValues(
@@ -104,6 +118,7 @@ const Grid = (props) => {
               isFlagged={isFlagged}
               isBomb={isBomb}
               onSquareClick={squareClickedHandler}
+              onFlagClick={flagClickedHandler}
             />
           ))
         )}
