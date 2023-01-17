@@ -1,8 +1,8 @@
-import Square from "./Square";
+import { useState, useEffect } from "react";
 
+import Square from "./Square";
 import classes from "./Grid.module.css";
 import ResetButton from "./ResetButton";
-import { useState } from "react";
 import {
   DEFAULT_COLUMNS,
   DEFAULT_NUM_BOMBS,
@@ -62,17 +62,23 @@ const generateGrid = (rows, columns, numBombs) => {
   return grid;
 };
 
-const Grid = (props) => {
+const Grid = ({ gameStatus, onChangeGameStatus}) => {
   const [gridValues, setGridValues] = useState(
     generateGrid(DEFAULT_ROWS, DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS)
   );
-  const [numBombsLeft, setNumBombsLeft] = useState(DEFAULT_NUM_BOMBS);
-  const [numFlaggedSquares, setNumFlaggedSquares] = useState(0);
+
+  useEffect(() => {
+    const isWin = gridValues.flat().every((square) => square.isClicked !== square.isBomb);
+    if (isWin) {
+      onChangeGameStatus(GAME_STATUSES.WIN);
+      console.log("you won yo");
+    }
+  }, [gridValues, onChangeGameStatus]);
 
   const squareClickedHandler = (x, y) => {
     const currentSquare = gridValues[y][x];
 
-    if (props.gameStatus === GAME_STATUSES.PLAYING) {
+    if (gameStatus === GAME_STATUSES.PLAYING) {
       if (!currentSquare.isClicked && !currentSquare.isFlagged) {
         setGridValues((prevGridValues) => {
           const newArray = JSON.parse(JSON.stringify(prevGridValues));
@@ -83,7 +89,7 @@ const Grid = (props) => {
           return newArray;
         });
         if (currentSquare.isBomb) {
-          props.onChangeGameStatus(GAME_STATUSES.LOSE);
+          onChangeGameStatus(GAME_STATUSES.LOSE);
         }
       }
     }
@@ -93,24 +99,6 @@ const Grid = (props) => {
     const currentSquare = gridValues[y][x];
 
     if (!currentSquare.isClicked) {
-      if (currentSquare.isFlagged) {
-        // removing a flag
-        setNumFlaggedSquares(
-          (prevNumFlaggedSquares) => prevNumFlaggedSquares - 1
-        );
-        if (numBombsLeft < DEFAULT_NUM_BOMBS && currentSquare.isBomb) {
-          setNumBombsLeft((prevNumBombsLeft) => prevNumBombsLeft + 1);
-        }
-      } else {
-        // adding a flag
-        setNumFlaggedSquares(
-          (prevNumFlaggedSquares) => prevNumFlaggedSquares + 1
-        );
-        if (currentSquare.isBomb) {
-          setNumBombsLeft((prevNumBombsLeft) => prevNumBombsLeft - 1);
-        }
-      }
-
       setGridValues((prevGridValues) => {
         const newArray = JSON.parse(JSON.stringify(prevGridValues));
         newArray[y][x] = {
@@ -119,19 +107,6 @@ const Grid = (props) => {
         };
         return newArray;
       });
-
-      console.log(
-        numBombsLeft,
-        numFlaggedSquares,
-        numBombsLeft === 0,
-        numFlaggedSquares === DEFAULT_NUM_BOMBS,
-        numBombsLeft === 0 && numFlaggedSquares === DEFAULT_NUM_BOMBS
-      );
-
-      if (numBombsLeft === 0 && numFlaggedSquares === DEFAULT_NUM_BOMBS) {
-        props.onChangeGameStatus(GAME_STATUSES.WIN);
-        console.log("you have won!");
-      }
     }
   };
 
@@ -139,12 +114,8 @@ const Grid = (props) => {
     setGridValues(
       generateGrid(DEFAULT_ROWS, DEFAULT_COLUMNS, DEFAULT_NUM_BOMBS)
     );
-    setNumBombsLeft(DEFAULT_NUM_BOMBS);
-    setNumFlaggedSquares(0);
-    props.onChangeGameStatus(GAME_STATUSES.PLAYING);
+    onChangeGameStatus(GAME_STATUSES.PLAYING);
   };
-
-  console.log(numBombsLeft);
 
   return (
     <div>
