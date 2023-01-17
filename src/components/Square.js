@@ -10,7 +10,7 @@ const Square = (props) => {
       if (props.isBomb) {
         return "B";
       } else {
-        return props.numBombsNearby;
+        return props.numBombsNearby === 0 ? "" : props.numBombsNearby;
       }
     } else {
       return "";
